@@ -50,4 +50,11 @@ typedef NS_ENUM(NSUInteger, YUFoldingSectionHeaderArrowPosition) {
 
 
 
+
+- (void)configWithBackgroundColor:(UIColor *)backgroundColor
+                       customView:(UIView *)view
+                       arrowImage:(UIImage *)arrowImage
+                    arrowPosition:(YUFoldingSectionHeaderArrowPosition)arrowPosition
+                     sectionState:(YUFoldingSectionState)sectionState
+                     sectionIndex:(NSInteger)sectionIndex;
 @end

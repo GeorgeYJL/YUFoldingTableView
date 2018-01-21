@@ -16,6 +16,7 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
 
 @property (nonatomic, strong) UILabel  *titleLabel;
 @property (nonatomic, strong) UILabel  *descriptionLabel;
+@property (nonatomic, strong) UIView *customView;
 @property (nonatomic, strong) UIImageView  *arrowImageView;
 @property (nonatomic, strong) CAShapeLayer  *separatorLine;
 @property (nonatomic, assign) YUFoldingSectionHeaderArrowPosition  arrowPosition;
@@ -33,7 +34,7 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
     if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
         
         [self setupSubviews];
-
+        
     }
     return self;
 }
@@ -61,16 +62,16 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
 }
 
 - (void)configWithBackgroundColor:(UIColor *)backgroundColor
-                     titleString:(NSString *)titleString
-                      titleColor:(UIColor *)titleColor
-                       titleFont:(UIFont *)titleFont
-               descriptionString:(NSString *)descriptionString
-                descriptionColor:(UIColor *)descriptionColor
-                 descriptionFont:(UIFont *)descriptionFont
-                      arrowImage:(UIImage *)arrowImage
-                   arrowPosition:(YUFoldingSectionHeaderArrowPosition)arrowPosition
-                    sectionState:(YUFoldingSectionState)sectionState
-                    sectionIndex:(NSInteger)sectionIndex
+                      titleString:(NSString *)titleString
+                       titleColor:(UIColor *)titleColor
+                        titleFont:(UIFont *)titleFont
+                descriptionString:(NSString *)descriptionString
+                 descriptionColor:(UIColor *)descriptionColor
+                  descriptionFont:(UIFont *)descriptionFont
+                       arrowImage:(UIImage *)arrowImage
+                    arrowPosition:(YUFoldingSectionHeaderArrowPosition)arrowPosition
+                     sectionState:(YUFoldingSectionState)sectionState
+                     sectionIndex:(NSInteger)sectionIndex
 {
     _sectionIndex = sectionIndex;
     [self.contentView setBackgroundColor:backgroundColor];
@@ -103,6 +104,46 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
     
 }
 
+- (void)configWithBackgroundColor:(UIColor *)backgroundColor
+                       customView:(UIView *)view
+                       arrowImage:(UIImage *)arrowImage
+                    arrowPosition:(YUFoldingSectionHeaderArrowPosition)arrowPosition
+                     sectionState:(YUFoldingSectionState)sectionState
+                     sectionIndex:(NSInteger)sectionIndex
+{
+    _sectionIndex = sectionIndex;
+    [self.contentView setBackgroundColor:backgroundColor];
+    self.customView=view;
+    [self.contentView insertSubview:self.customView belowSubview:self.titleLabel];
+    
+    self.titleLabel.text =@"";
+    self.titleLabel.textColor = [UIColor clearColor];
+    self.titleLabel.font = [UIFont systemFontOfSize:0];
+    
+    self.descriptionLabel.text = @"";
+    self.descriptionLabel.textColor = [UIColor clearColor];
+    self.descriptionLabel.font = [UIFont systemFontOfSize:0];;
+    
+    
+    self.arrowImageView.image = arrowImage;
+    self.arrowPosition = arrowPosition;
+    self.sectionState = sectionState;
+    
+    if (sectionState == YUFoldingSectionStateShow) {
+        if (self.arrowPosition == YUFoldingSectionHeaderArrowPositionRight) {
+            self.arrowImageView.transform = CGAffineTransformMakeRotation(-M_PI/2);
+        }else{
+            self.arrowImageView.transform = CGAffineTransformMakeRotation(M_PI/2);
+        }
+    } else {
+        if (self.arrowPosition == YUFoldingSectionHeaderArrowPositionRight) {
+            _arrowImageView.transform = CGAffineTransformMakeRotation(M_PI/2);
+        }else{
+            self.arrowImageView.transform = CGAffineTransformMakeRotation(0);
+        }
+    }
+    
+}
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -121,6 +162,8 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
     [self.descriptionLabel setFrame:descriptionRect];
     [self.arrowImageView setFrame:arrowRect];
     [self.separatorLine setPath:[self getSepertorPath].CGPath];
+    
+    [self.customView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 }
 
 
@@ -163,6 +206,7 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
 }
 
 // MARK: -----------------------  getter
+
 
 - (UILabel *)titleLabel
 {
@@ -218,3 +262,4 @@ static CGFloat const YUFoldingIconWidth           = 24.0f;
 }
 
 @end
+

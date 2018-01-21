@@ -68,6 +68,12 @@
 
 - (UIColor *)yuFoldingTableView:(YUFoldingTableView *)yuTableView textColorForDescriptionInSection:(NSInteger )section;
 
+
+/**
+ *   添加自定义View for header
+ */
+- (UIView *)yuFoldingTableView:(YUFoldingTableView *)yuTableView viewForHeaderInSection:(NSInteger )section;
+
 @end
 
 @interface YUFoldingTableView : UITableView <UITableViewDelegate,UITableViewDataSource>

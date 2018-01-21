@@ -169,7 +169,13 @@ static NSString *YUFoldingSectionHeaderID = @"YUFoldingSectionHeader";
     }
     return [UIImage imageNamed:@"YUFolding_arrow"];
 }
-
+- (UIView *)viewForSection:(NSInteger )section
+{
+    if (_foldingDelegate && [_foldingDelegate respondsToSelector:@selector(yuFoldingTableView:viewForHeaderInSection:)]) {
+        return [_foldingDelegate yuFoldingTableView:self viewForHeaderInSection:section];
+    }
+    return nil;
+}
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -216,17 +222,27 @@ static NSString *YUFoldingSectionHeaderID = @"YUFoldingSectionHeader";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     YUFoldingSectionHeader *sectionHeaderView = [self dequeueReusableHeaderFooterViewWithIdentifier:YUFoldingSectionHeaderID];
-    [sectionHeaderView configWithBackgroundColor:[self backgroundColorForSection:section]
-                                     titleString:[self titleForSection:section]
-                                      titleColor:[self titleColorForSection:section]
-                                       titleFont:[self titleFontForSection:section]
-                               descriptionString:[self descriptionForSection:section]
-                                descriptionColor:[self descriptionColorForSection:section]
-                                 descriptionFont:[self descriptionFontForSection:section]
-                                      arrowImage:[self arrowImageForSection:section]
-                                   arrowPosition:[self perferedArrowPosition]
-                                    sectionState:((NSNumber *)self.statusArray[section]).integerValue
-                                    sectionIndex:section];
+    if ([self viewForSection:section]!=nil) {
+        [sectionHeaderView configWithBackgroundColor:[self backgroundColorForSection:section]
+                                          customView:[self viewForSection:section]
+                                          arrowImage:[self arrowImageForSection:section]
+                                       arrowPosition:[self perferedArrowPosition]
+                                        sectionState:((NSNumber *)self.statusArray[section]).integerValue
+                                        sectionIndex:section];
+    }else{
+        
+        [sectionHeaderView configWithBackgroundColor:[self backgroundColorForSection:section]
+                                         titleString:[self titleForSection:section]
+                                          titleColor:[self titleColorForSection:section]
+                                           titleFont:[self titleFontForSection:section]
+                                   descriptionString:[self descriptionForSection:section]
+                                    descriptionColor:[self descriptionColorForSection:section]
+                                     descriptionFont:[self descriptionFontForSection:section]
+                                          arrowImage:[self arrowImageForSection:section]
+                                       arrowPosition:[self perferedArrowPosition]
+                                        sectionState:((NSNumber *)self.statusArray[section]).integerValue
+                                        sectionIndex:section];
+    }
     sectionHeaderView.tapDelegate = self;
     return sectionHeaderView;
 }
@@ -273,3 +289,4 @@ static NSString *YUFoldingSectionHeaderID = @"YUFoldingSectionHeader";
 
 
 @end
+
